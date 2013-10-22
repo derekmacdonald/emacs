@@ -1,38 +1,64 @@
-;; This is the Aquamacs Preferences file.
-;; Add Emacs-Lisp code here that should be executed whenever
-;; you start Aquamacs Emacs. If errors occur, Aquamacs will stop
-;; evaluating this file and print errors in the *Messags* buffer.
-;; Use this file in place of ~/.emacs (which is loaded as well.)
-
 ;;CEDET needs to be at the top to over-write the built in version
+;;(load "~/.emacs.d/ottconfig/rc/emacs-rc-cedet.el")
+
+(defgroup persistent-scratch nil
+  "Save scratch buffer between sessions"
+  :group 'initialization)
+
+(defcustom persistent-scratch-file-name "~/.emacs-persistent-scratch"
+  "Location of *scratch* file contents for persistent-scratch."
+  :type 'directory
+  :group 'persistent-scratch)
+
+(defun save-persistent-scratch ()
+  "Write the contents of *scratch* to the file name
+`persistent-scratch-file-name'."
+  (with-current-buffer (get-buffer-create "*scratch*")
+    (write-region (point-min) (point-max) persistent-scratch-file-name)))
+
+(defun load-persistent-scratch ()
+  "Load the contents of `persistent-scratch-file-name' into the
+scratch buffer, clearing its contents first."
+  (if (file-exists-p persistent-scratch-file-name)
+      (with-current-buffer (get-buffer "*scratch*")
+        (delete-region (point-min) (point-max))
+        (insert-file-contents persistent-scratch-file-name))))
+
+(push #'load-persistent-scratch after-init-hook)
+(push #'save-persistent-scratch kill-emacs-hook)
+
+(run-with-idle-timer 60 t 'save-persistent-scratch)
+;;!dcm! -- clean this up
+(provide 'persistent-scratch)
+(require 'recentf)
+(recentf-mode 1)
+(setq recentf-max-menu-items 50)
+(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+
+
+
+
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/")
+(add-to-list 'load-path "~/.emacs.d/")
 
-(when (featurep 'aquamacs)
-  (load-file "~/dev/elisp/cedet-1.1/common/cedet.el"))
+;;(load "~/.emacs.d/ottconfig/rc/emacs-rc-cedet.el")
 
 (require 'ido)
 (ido-mode t)
-
-(global-ede-mode 1)
-(semantic-load-enable-gaudy-code-helpers)
-(global-srecode-minor-mode 1)
-
-(require 'semantic/ia)
-(add-to-list 'load-path "~/.emacs.d/")
 
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (ac-config-default)
 
-(defun my-semantic-hook ()
-  (imenu-add-to-menubar "TAGS"))
-(add-hook 'semantic-init-hooks 'my-semantic-hook)
+;; (defun my-semantic-hook ()
+;;   (imenu-add-to-menubar "TAGS"))
+;; (add-hook 'semantic-init-hooks 'my-semantic-hook)
 
-(defun my-c-mode-cedet-hook ()
-  (add-to-list 'ac-sources 'ac-source-gtags)
-  (add-to-list 'ac-sources 'ac-source-semantic))
-(add-hook 'c-mode-common-hook 'my-c-mode-cedet-hook)
+;; (defun my-c-mode-cedet-hook ()
+;;   (add-to-list 'ac-sources 'ac-source-gtags)
+;;   (add-to-list 'ac-sources 'ac-source-semantic))
+;; (add-hook 'c-mode-common-hook 'my-c-mode-cedet-hook)
 
 (require 'git)
 
@@ -84,4 +110,30 @@
 (define-key global-map [(control f11)] 'cscope-prev-symbol)
 (define-key global-map [(control f12)] 'cscope-prev-file)
 (define-key global-map [(meta f9)]  'cscope-display-buffer)
-(defin-ekey global-map [(meta f10)] 'cscope-display-buffer-toggle)
+(define-key global-map [(meta f10)] 'cscope-display-buffer-toggle)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(menu-bar-mode t)
+ '(tool-bar-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(Buffer-menu-buffer ((t (:weight bold))) t))
+
+(require 'tramp)
+(defun sudo-edit (&optional arg)
+  "Edit currently visited file as root.
+
+With a prefix ARG prompt for a file to visit.
+Will also prompt for a file to visit if current
+buffer is not visiting a file."
+  (interactive "P")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:"
+                         (ido-read-file-name "Find file(as root): ")))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
