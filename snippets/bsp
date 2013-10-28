@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Boost Shared Ptr
+# key: bsp
+boost:shared_ptr<${T}>
+

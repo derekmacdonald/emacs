@@ -1,5 +1,38 @@
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
+(require 'package)
+(add-to-list 'package-archives
+  '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
 ;;CEDET needs to be at the top to over-write the built in version
-;;(load "~/.emacs.d/ottconfig/rc/emacs-rc-cedet.el")
+;;; emacs-rc-cedet.el ---
+;; (require 'eieio) 
+;; (load-file "~/projects/cedet/common/cedet.el")
+;; (semantic-load-enable-excessive-code-helpers)
+(load-file "~/projects/cedet/cedet-devel-load.el")
+;;(load-file "~/projects/cedet/contrib/cedet-contrib-load.el")
+;;(add-to-list 'load-path "~/projects/cedet/contrib/")
+;;!dcm!(add-to-list  'Info-directory-list "~/projects/cedet-bzr/doc/info")
+
+(add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+(add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
+(add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+(add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
+;(add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+(add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
+(add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
+;;(add-to-list 'semantic-default-submodes 'global-semantic-show-unmatched-syntax-mode)
+;;(add-to-list 'semantic-default-submodes 'global-semantic-highlight-edits-mode)
+;;(add-to-list 'semantic-default-submodes 'global-semantic-show-parser-state-mode)
+
+;; Activate semantic
+(semantic-mode 1)
+
+(require 'semantic/bovine/c)
+(require 'semantic/bovine/clang)
+
+(require 'cedet-files)
 
 (defgroup persistent-scratch nil
   "Save scratch buffer between sessions"
@@ -99,11 +132,13 @@ scratch buffer, clearing its contents first."
 
 (require 'xcscope)
 
+(define-key cscope:map [(control f3)]  'cscope-find-functions-calling-this-function)
+(define-key cscope:map [(control f4)]  'cscope-find-called-functions)
 (define-key global-map [(control f3)]  'cscope-set-initial-directory)
 (define-key global-map [(control f4)]  'cscope-unset-initial-directory)
 (define-key global-map [(control f5)]  'cscope-find-this-symbol)
 (define-key global-map [(control f6)]  'cscope-find-global-definition)
-(define-key global-map [(control f7)] 'cscope-find-global-definition-no-prompting)
+(define-key global-map [(control f7)]  'cscope-find-global-definition-no-prompting)
 (define-key global-map [(control f8)]  'cscope-pop-mark)
 (define-key global-map [(control f9)]  'cscope-next-symbol)
 (define-key global-map [(control f10)] 'cscope-next-file)
@@ -116,6 +151,8 @@ scratch buffer, clearing its contents first."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ac-delay 0.05)
+ '(c-offsets-alist (quote ((innamespace . 0))))
  '(menu-bar-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -123,7 +160,7 @@ scratch buffer, clearing its contents first."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(Buffer-menu-buffer ((t (:weight bold))) t))
+ '(buffer-menu-buffer ((t (:weight bold)))))
 
 (require 'tramp)
 (defun sudo-edit (&optional arg)
@@ -137,3 +174,29 @@ buffer is not visiting a file."
       (find-file (concat "/sudo:root@localhost:"
                          (ido-read-file-name "Find file(as root): ")))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'post-forward-angle-brackets)
+
+
+;;c++ mode setup
+(c-add-style "resip-style" 
+	     '("ellemtel"
+	       (indent-tabs-mode . nil)
+	       (c-offsets-alist . ((innamespace . [0])))))
+
+(defun my-c++-mode-hook ()
+  (c-set-style "resip-style")        ; use my-style defined above
+  (auto-fill-mode)         
+  (c-toggle-auto-hungry-state 1))
+
+(add-hook 'c++-mode-hook
+          '(lambda ()
+             (c-set-style "resip-style")))
+
+(defun iwb ()
+  "indent whole buffer"
+  (interactive)
+  (delete-trailing-whitespace)
+  (indent-region (point-min) (point-max) nil)
+  (untabify (point-min) (point-max)))

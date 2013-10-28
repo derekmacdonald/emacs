@@ -1,0 +1,4 @@
+[submodule "ottconfig"]
+	path = ottconfig
+	url = git://github.com/alexott/emacs-configs.git
+	branch = master
