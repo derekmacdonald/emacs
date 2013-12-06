@@ -57,6 +57,7 @@ scratch buffer, clearing its contents first."
         (delete-region (point-min) (point-max))
         (insert-file-contents persistent-scratch-file-name))))
 
+;;?dcm? -- WTF does # do in this context?
 (push #'load-persistent-scratch after-init-hook)
 (push #'save-persistent-scratch kill-emacs-hook)
 
@@ -188,11 +189,11 @@ buffer is not visiting a file."
 (defun my-c++-mode-hook ()
   (c-set-style "resip-style")        ; use my-style defined above
   (auto-fill-mode)         
-  (c-toggle-auto-hungry-state 1))
+  (c-toggle-auto-hungry-state 1)
+  (set-fill-column 90))
 
 (add-hook 'c++-mode-hook
-          '(lambda ()
-             (c-set-style "resip-style")))
+          'my-c++-mode-hook)
 
 (defun iwb ()
   "indent whole buffer"
@@ -200,3 +201,13 @@ buffer is not visiting a file."
   (delete-trailing-whitespace)
   (indent-region (point-min) (point-max) nil)
   (untabify (point-min) (point-max)))
+
+
+(add-hook 'c-mode-common-hook
+  (lambda()
+    (local-set-key [(control tab)] 'hs-toggle-hiding)
+    ;; (local-set-key (kbd "C-c <left>")  'hs-hide-block)
+    ;; (local-set-key (kbd "C-c <up>")    'hs-hide-all)
+    ;; (local-set-key (kbd "C-c <down>")  'hs-show-all)
+    (hs-minor-mode t)))
+
