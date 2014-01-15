@@ -1,9 +1,12 @@
-(setq custom-file "~/.emacs.d/custom.el")
+(cond ((featurep 'aquamacs) (setq custom-file "~/.emacs.d/custom_aquamacs.el"))
+      ((eq system-type 'darwin) (setq custom-file "~/.emacs.d/custom_osx.el"))
+      ( t  (setq custom-file "~/.emacs.d/custom.elin")))
+
 (load custom-file)
 
 (require 'package)
 (add-to-list 'package-archives
-  '("melpa" . "http://melpa.milkbox.net/packages/") t)
+	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 ;;CEDET needs to be at the top to over-write the built in version
 ;;; emacs-rc-cedet.el ---
@@ -210,4 +213,13 @@ buffer is not visiting a file."
     ;; (local-set-key (kbd "C-c <up>")    'hs-hide-all)
     ;; (local-set-key (kbd "C-c <down>")  'hs-show-all)
     (hs-minor-mode t)))
+
+
+;;org-mode stuff
+(defun my-org-mode-hook ()
+  (turn-on-auto-fill)
+  (set-fill-column 110))
+
+(add-hook 'org-mode-hook
+          'my-org-mode-hook)
 
