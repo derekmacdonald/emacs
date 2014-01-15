@@ -1,6 +1,6 @@
 (cond ((featurep 'aquamacs) (setq custom-file "~/.emacs.d/custom_aquamacs.el"))
       ((eq system-type 'darwin) (setq custom-file "~/.emacs.d/custom_osx.el"))
-      ( t  (setq custom-file "~/.emacs.d/custom.elin")))
+      ( t  (setq custom-file "~/.emacs.d/custom.el")))
 
 (load custom-file)
 
