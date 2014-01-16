@@ -1,24 +1,24 @@
-((("stopFile" .
+((("mMediaPlane" .
+   [1 0 0 0 0 0 0 0 0 0 0])
+  ("u" .
+   [1])
+  ("MediaPlane" .
+   [3 0 0 0 0 0 0 0 0 0])
+  ("boundary" .
+   [1 0 0 0 0 0 0 0])
+  ("re" .
+   [1 0])
+  ("debug-on-error" .
+   [0 0 0 0 0 0 1 0 0 0 0 0 0 0])
+  ("setq" .
+   [1 0 0 0])
+  ("conv" .
+   [4 0 0 0])
+  ("getBridgeMixer" .
+   [0 0 0 1 1 0 0 0 0 0 0 0 0 2])
+  ("playFile" .
    [1 0 0 0 0 0 0 0])
   ("stopTone" .
    [1 0 0 0 0 0 0 0])
-  ("playFile" .
-   [1 0 0 0 0 0 0 0])
-  ("getBridgeMixer" .
-   [0 0 0 1 1 0 0 0 0 0 0 0 0 2])
-  ("conv" .
-   [4 0 0 0])
-  ("setq" .
-   [1 0 0 0])
-  ("debug-on-error" .
-   [0 0 0 0 0 0 1 0 0 0 0 0 0 0])
-  ("re" .
-   [1 0])
-  ("boundary" .
-   [1 0 0 0 0 0 0 0])
-  ("MediaPlane" .
-   [3 0 0 0 0 0 0 0 0 0])
-  ("u" .
-   [1])
-  ("mMediaPlane" .
-   [1 0 0 0 0 0 0 0 0 0 0])))
+  ("stopFile" .
+   [1 0 0 0 0 0 0 0])))
