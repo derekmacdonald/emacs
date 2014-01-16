@@ -220,6 +220,16 @@ buffer is not visiting a file."
   (turn-on-auto-fill)
   (set-fill-column 110))
 
+(require 'org-inlinetask)
+
 (add-hook 'org-mode-hook
           'my-org-mode-hook)
 
+;; predictive install location
+(add-to-list 'load-path "~/.emacs.d/predictive/")
+;; dictionary locations
+(add-to-list 'load-path "~/.emacs.d/predictive/latex/")
+(add-to-list 'load-path "~/.emacs.d/predictive/texinfo/")
+(add-to-list 'load-path "~/.emacs.d/predictive/html/")
+;; load predictive package
+(require 'predictive)
