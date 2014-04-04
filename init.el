@@ -1,6 +1,6 @@
 (cond ((featurep 'aquamacs) (setq custom-file "~/.emacs.d/custom_aquamacs.el"))
       ((eq system-type 'darwin) (setq custom-file "~/.emacs.d/custom_osx.el"))
-      ( t  (setq custom-file "~/.emacs.d/custom.elin")))
+      ( t  (setq custom-file "~/.emacs.d/custom.el")))
 
 (load custom-file)
 
@@ -225,6 +225,16 @@ buffer is not visiting a file."
 		  ("\\.docx\\'" . default)
 		  ) org-file-apps )))
 
+(require 'org-inlinetask)
+
 (add-hook 'org-mode-hook
           'my-org-mode-hook)
 
+;; predictive install location
+(add-to-list 'load-path "~/.emacs.d/predictive/")
+;; dictionary locations
+(add-to-list 'load-path "~/.emacs.d/predictive/latex/")
+(add-to-list 'load-path "~/.emacs.d/predictive/texinfo/")
+(add-to-list 'load-path "~/.emacs.d/predictive/html/")
+;; load predictive package
+(require 'predictive)
