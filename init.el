@@ -218,7 +218,12 @@ buffer is not visiting a file."
 ;;org-mode stuff
 (defun my-org-mode-hook ()
   (turn-on-auto-fill)
-  (set-fill-column 110))
+  (set-fill-column 110)
+  (setq org-file-apps
+	(append '(
+		  ("\\.doc\\'" . default)
+		  ("\\.docx\\'" . default)
+		  ) org-file-apps )))
 
 (add-hook 'org-mode-hook
           'my-org-mode-hook)
