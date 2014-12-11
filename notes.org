@@ -1,0 +1,22 @@
+
+* Key Bindings and Keymaps
+
+[[http://www.masteringemacs.org/articles/2011/02/08/mastering-key-bindings-emacs/][MasteringKeyBindings]]
+[[http://www.emacswiki.org/emacs/unbound.el][Unbound.el]] -- show unbound with varying complexity. Doesn't seem to include A- or s-
+
+* Regular Expressions
+[[http://www.masteringemacs.org/articles/2011/04/12/re-builder-interactive-regexp-builder/][re-builder]]
+
+* Help Environment
+ help-fns+.el
+
+* word diff on os x using word to text tool
+https://gist.github.com/nachocab/6429893
+
+* Main TODO
+** TODO Chords
+** TODO Better help w/ links
+** TODO common compile and comment/iuncomment key
+** TODO xkeys
+** TODO better redo
+

@@ -9,6 +9,7 @@
  '(menu-bar-mode t)
  '(ns-alternate-modifier (quote alt))
  '(ns-command-modifier (quote meta))
+ '(reb-re-syntax (quote string))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
