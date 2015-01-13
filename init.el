@@ -75,9 +75,9 @@ scratch buffer, clearing its contents first."
 
 
 
-(add-to-list 'load-path "~/.emacs.d/elisp/")
+;;(add-to-list 'load-path "~/.emacs.d/elisp/")
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/")
-(add-to-list 'load-path "~/.emacs.d/")
+(add-to-list 'load-path "~/.emacs.d/lisp")
 
 ;;(load "~/.emacs.d/ottconfig/rc/emacs-rc-cedet.el")
 
@@ -131,7 +131,7 @@ scratch buffer, clearing its contents first."
 	      (add-hook 'ediff-quit-hook restore-window-configuration 'append)
 	      (add-hook 'ediff-suspend-hook restore-window-configuration 'append))))
 
-(load-file "~/.emacs.d/elisp/sourcepair.el")
+(load-file "~/.emacs.d/lisp/sourcepair.el")
 (define-key global-map "\M-s" 'sourcepair-load)
 
 (require 'xcscope)
