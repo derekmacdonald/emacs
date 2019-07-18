@@ -7,8 +7,8 @@
  '(c-offsets-alist (quote ((innamespace . 0))))
  '(ido-enable-flex-matching t)
  '(menu-bar-mode t)
- '(package-selected-packages (quote (unbound markdown-mode+ help-fns+ auto-complete)))
  '(reb-re-syntax (quote string))
+ '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
