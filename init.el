@@ -1,9 +1,12 @@
 ;;; Set and load platform specific custom-file
-(cond ((featurep 'aquamacs) (setq custom-file "~/.emacs.d/custom_aquamacs.el"))
-      ((eq system-type 'darwin) (setq custom-file "~/.emacs.d/custom_osx.el"))
-      ((eq system-type 'windows-nt) (setq custom-file "~/.emacs.d/custom_windows.el"))
-      ( t  (setq custom-file "~/.emacs.d/custom.el")))
-
+(cond ((featurep 'aquamacs)
+       (setq custom-file "~/.emacs.d/custom_aquamacs.el"))
+      ((eq system-type 'darwin)
+       (setq custom-file "~/.emacs.d/custom_osx.el"))
+      ((eq system-type 'windows-nt)
+       (setq custom-file "~/.emacs.d/custom_windows.el"))
+      ( t
+	(setq custom-file "~/.emacs.d/custom.el")))
 (load custom-file)
 
 ;;; Git setup for Windows
