@@ -13,61 +13,41 @@
 	   (add-to-list 'exec-path "C:/Program Files/Git/bin")
 	   (add-to-list 'exec-path "C:/Program Files/Git/usr/bin")))
 
-(require 'package)
-
-(add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-
-(defgroup persistent-scratch nil
-  "Save scratch buffer between sessions"
-  :group 'initialization)
-
-(defcustom persistent-scratch-file-name "~/.emacs-persistent-scratch"
-  "Location of *scratch* file contents for persistent-scratch."
-  :type 'directory
-  :group 'persistent-scratch)
-
-(defun save-persistent-scratch ()
-  "Write the contents of *scratch* to the file name
-`persistent-scratch-file-name'."
-  (with-current-buffer (get-buffer-create "*scratch*")
-    (write-region (point-min) (point-max) persistent-scratch-file-name)))
-
-(defun load-persistent-scratch ()
-  "Load the contents of `persistent-scratch-file-name' into the
-scratch buffer, clearing its contents first."
-  (if (file-exists-p persistent-scratch-file-name)
-      (with-current-buffer (get-buffer "*scratch*")
-        (delete-region (point-min) (point-max))
-        (insert-file-contents persistent-scratch-file-name))))
-
-;;?dcm? -- WTF does # do in this context?
-(push #'load-persistent-scratch after-init-hook)
-(push #'save-persistent-scratch kill-emacs-hook)
-
-(run-with-idle-timer 60 t 'save-persistent-scratch)
-;;!dcm! -- clean this up
-(provide 'persistent-scratch)
 (require 'recentf)
 (recentf-mode 1)
 (setq recentf-max-menu-items 50)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 
-
-
-
-;;(add-to-list 'load-path "~/.emacs.d/elisp/")
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/")
 (add-to-list 'load-path "~/.emacs.d/lisp")
-
-;;(load "~/.emacs.d/ottconfig/rc/emacs-rc-cedet.el")
 
 (require 'ido)
 (ido-mode t)
 
+;;; Bootstrap straight
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+       'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+
+;;; Install Packages
+(straight-use-package 'auto-complete)
+(straight-use-package 'magit)
+
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (ac-config-default)
+
+
 
 ;; (defun my-semantic-hook ()
 ;;   (imenu-add-to-menubar "TAGS"))
@@ -77,8 +57,6 @@ scratch buffer, clearing its contents first."
 ;;   (add-to-list 'ac-sources 'ac-source-gtags)
 ;;   (add-to-list 'ac-sources 'ac-source-semantic))
 ;; (add-hook 'c-mode-common-hook 'my-c-mode-cedet-hook)
-
-(require 'git)
 
 (global-set-key [f2] 'other-window)
 (global-set-key [(M-f2)] '2C-command) 
@@ -90,9 +68,6 @@ scratch buffer, clearing its contents first."
 (global-set-key (kbd "C-c o") 'occur)
 
 (setq special-display-regexps (remove "[ ]?\\*[hH]elp.*" special-display-regexps))
-
-(setq ns-function-modifier 'hyper)
-
 
 (when (fboundp 'winner-mode)
   (winner-mode 1))
@@ -197,13 +172,5 @@ buffer is not visiting a file."
 (add-hook 'org-mode-hook
           'my-org-mode-hook)
 
-;; predictive install location
-;;(add-to-list 'load-path "~/.emacs.d/predictive/")
-;; dictionary locations
-;;(add-to-list 'load-path "~/.emacs.d/predictive/latex/")
-;;(add-to-list 'load-path "~/.emacs.d/predictive/texinfo/")
-;;(add-to-list 'load-path "~/.emacs.d/predictive/html/")
-;; load predictive package
-;;(require 'predictive)
 (put 'narrow-to-region 'disabled nil)
 
