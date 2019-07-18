@@ -1,41 +1,22 @@
 (cond ((featurep 'aquamacs) (setq custom-file "~/.emacs.d/custom_aquamacs.el"))
       ((eq system-type 'darwin) (setq custom-file "~/.emacs.d/custom_osx.el"))
+      ((eq system-type 'windows-nt) (setq custom-file "~/.emacs.d/custom_windows.el"))
       ( t  (setq custom-file "~/.emacs.d/custom.el")))
 
 (load custom-file)
 
+(if (equal system-type 'windows-nt)
+    (progn (prefer-coding-system 'utf-8)
+	   (setq explicit-shell-file-name "C:/Program Files/Git/bin/bash.exe")
+	   (setq explicit-bash.exe-args '("--noediting" "--login" "-i"))
+	   (setq shell-file-name explicit-shell-file-name)
+	   (add-to-list 'exec-path "C:/Program Files/Git/bin")
+	   (add-to-list 'exec-path "C:/Program Files/Git/usr/bin")))
+
 (require 'package)
+
 (add-to-list 'package-archives
-	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
-
-;;CEDET needs to be at the top to over-write the built in version
-;;; emacs-rc-cedet.el ---
-;; (require 'eieio) 
-;; (load-file "~/projects/cedet/common/cedet.el")
-;; (semantic-load-enable-excessive-code-helpers)
-;;(load-file "~/projects/cedet/cedet-devel-load.el")
-;;(load-file "~/projects/cedet/contrib/cedet-contrib-load.el")
-;;(add-to-list 'load-path "~/projects/cedet/contrib/")
-;;!dcm!(add-to-list  'Info-directory-list "~/projects/cedet-bzr/doc/info")
-
-(add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
-(add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
-(add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
-(add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
-;(add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
-;;(add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
-(add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
-;;(add-to-list 'semantic-default-submodes 'global-semantic-show-unmatched-syntax-mode)
-;;(add-to-list 'semantic-default-submodes 'global-semantic-highlight-edits-mode)
-;;(add-to-list 'semantic-default-submodes 'global-semantic-show-parser-state-mode)
-
-;; Activate semantic
-(semantic-mode 1)
-
-;;(require 'semantic/bovine/c)
-;;(require 'semantic/bovine/clang)
-
-;;(require 'cedet-files)
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
 (defgroup persistent-scratch nil
   "Save scratch buffer between sessions"
@@ -99,10 +80,13 @@ scratch buffer, clearing its contents first."
 
 (require 'git)
 
+(global-set-key [f2] 'other-window)
+(global-set-key [(M-f2)] '2C-command) 
 (global-set-key [f3] 'ido-switch-buffer)
 (global-set-key [f4] 'bury-buffer)
+(global-set-key [(C-f4)] 'ido-kill-buffer)
 (global-set-key [f7] 'next-error)
-(global-set-key [(S-f7)] 'previous-error)
+(global-set-key [(M-f7)] 'previous-error)
 (global-set-key (kbd "C-c o") 'occur)
 
 (setq special-display-regexps (remove "[ ]?\\*[hH]elp.*" special-display-regexps))
@@ -134,22 +118,6 @@ scratch buffer, clearing its contents first."
 (load-file "~/.emacs.d/lisp/sourcepair.el")
 (define-key global-map "\M-s" 'sourcepair-load)
 
-(require 'xcscope)
-
-(define-key cscope:map [(control f3)]  'cscope-find-functions-calling-this-function)
-(define-key cscope:map [(control f4)]  'cscope-find-called-functions)
-(define-key global-map [(control f3)]  'cscope-set-initial-directory)
-(define-key global-map [(control f4)]  'cscope-unset-initial-directory)
-(define-key global-map [(control f5)]  'cscope-find-this-symbol)
-(define-key global-map [(control f6)]  'cscope-find-global-definition)
-(define-key global-map [(control f7)]  'cscope-find-global-definition-no-prompting)
-(define-key global-map [(control f8)]  'cscope-pop-mark)
-(define-key global-map [(control f9)]  'cscope-next-symbol)
-(define-key global-map [(control f10)] 'cscope-next-file)
-(define-key global-map [(control f11)] 'cscope-prev-symbol)
-(define-key global-map [(control f12)] 'cscope-prev-file)
-(define-key global-map [(meta f9)]  'cscope-display-buffer)
-(define-key global-map [(meta f10)] 'cscope-display-buffer-toggle)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -214,7 +182,6 @@ buffer is not visiting a file."
     ;; (local-set-key (kbd "C-c <down>")  'hs-show-all)
     (hs-minor-mode t)))
 
-
 ;;org-mode stuff
 (defun my-org-mode-hook ()
   (turn-on-auto-fill)
@@ -240,68 +207,3 @@ buffer is not visiting a file."
 ;;(require 'predictive)
 (put 'narrow-to-region 'disabled nil)
 
-(defun my-markdown-mode-hook ()
-  (define-key markdown-mode-map (kbd "A-j") 'markdown-jump)
-  (define-key markdown-mode-map (kbd "A-k") 'markdown-kill-thing-at-point)
-  (define-key markdown-mode-map (kbd "A-n") 'outline-next-visible-heading)
-  (define-key markdown-mode-map (kbd "A-o") 'markdown-follow-thing-at-point)
-  (define-key markdown-mode-map (kbd "A-p") 'outline-previous-visible-heading)
-;;  (define-key markdown-mode-map (kbd "A-s") 'Prefix Command)
-;;  (define-key markdown-mode-map (kbd "A-t") 'Prefix Command)
-  (define-key markdown-mode-map (kbd "A-u") 'outline-up-heading)
-;;  (define-key markdown-mode-map (kbd "A-x") 'Prefix Command)
-  (define-key markdown-mode-map (kbd "A-]") 'markdown-complete)
-  (define-key markdown-mode-map (kbd "A-_") 'markdown-insert-hr)
-  (define-key markdown-mode-map (kbd "A-<") 'markdown-exdent-region)
-  (define-key markdown-mode-map (kbd "A->") 'markdown-indent-region)
-  (define-key markdown-mode-map (kbd "A--") 'markdown-promote)
-  (define-key markdown-mode-map (kbd "A-=") 'markdown-demote)
-  (define-key markdown-mode-map (kbd "M-n") 'markdown-next-link)
-  (define-key markdown-mode-map (kbd "M-p") 'markdown-previous-link)
-  (define-key markdown-mode-map (kbd "M-{") 'markdown-backward-paragraph)
-  (define-key markdown-mode-map (kbd "M-}") 'markdown-forward-paragraph)
-  (define-key markdown-mode-map (kbd "C-M-i") 'ispell-complete-word)
-  (define-key markdown-mode-map (kbd "A-x d") 'markdown-move-down)
-  (define-key markdown-mode-map (kbd "A-x l") 'markdown-promote)
-  (define-key markdown-mode-map (kbd "A-x m") 'markdown-insert-list-item)
-  (define-key markdown-mode-map (kbd "A-x r") 'markdown-demote)
-  (define-key markdown-mode-map (kbd "A-x u") 'markdown-move-up)
-  (define-key markdown-mode-map (kbd "A-c ]") 'markdown-complete-buffer)
-  (define-key markdown-mode-map (kbd "A-c c") 'markdown-check-refs)
-  (define-key markdown-mode-map (kbd "A-c e") 'markdown-export)
-  (define-key markdown-mode-map (kbd "A-c m") 'markdown-other-window)
-  (define-key markdown-mode-map (kbd "A-c n") 'markdown-cleanup-list-numbers)
-  (define-key markdown-mode-map (kbd "A-c o") 'markdown-open)
-  (define-key markdown-mode-map (kbd "A-c p") 'markdown-preview)
-  (define-key markdown-mode-map (kbd "A-c v") 'markdown-export-and-preview)
-  (define-key markdown-mode-map (kbd "A-c w") 'markdown-kill-ring-save)
-  (define-key markdown-mode-map (kbd "A-s C-b") 'markdown-blockquote-region)
-  (define-key markdown-mode-map (kbd "A-s C-p") 'markdown-pre-region)
-  (define-key markdown-mode-map (kbd "A-s b") 'markdown-insert-blockquote)
-  (define-key markdown-mode-map (kbd "A-s c") 'markdown-insert-code)
-  (define-key markdown-mode-map (kbd "A-s e") 'markdown-insert-italic)
-  (define-key markdown-mode-map (kbd "A-s p") 'markdown-insert-pre)
-  (define-key markdown-mode-map (kbd "A-s s") 'markdown-insert-bold)
-  (define-key markdown-mode-map (kbd "A-t !") 'markdown-insert-header-setext-1)
-  (define-key markdown-mode-map (kbd "A-t 1") 'markdown-insert-header-atx-1)
-  (define-key markdown-mode-map (kbd "A-t 2") 'markdown-insert-header-atx-2)
-  (define-key markdown-mode-map (kbd "A-t 3") 'markdown-insert-header-atx-3)
-  (define-key markdown-mode-map (kbd "A-t 4") 'markdown-insert-header-atx-4)
-  (define-key markdown-mode-map (kbd "A-t 5") 'markdown-insert-header-atx-5)
-  (define-key markdown-mode-map (kbd "A-t 6") 'markdown-insert-header-atx-6)
-  (define-key markdown-mode-map (kbd "A-t @") 'markdown-insert-header-setext-2)
-  (define-key markdown-mode-map (kbd "A-t H") 'markdown-insert-header-setext-dwim)
-  (define-key markdown-mode-map (kbd "A-t h") 'markdown-insert-header-dwim)
-  (define-key markdown-mode-map (kbd "A-t s") 'markdown-insert-header-setext-2)
-  (define-key markdown-mode-map (kbd "A-t t") 'markdown-insert-header-setext-1)
-  (define-key markdown-mode-map (kbd "A-TAB I") 'markdown-insert-reference-image)
-  (define-key markdown-mode-map (kbd "A-TAB i") 'markdown-insert-image)
-  (define-key markdown-mode-map (kbd "A-a l") 'markdown-insert-reference-link-dwim)
-  (define-key markdown-mode-map (kbd "A-a f") 'markdown-insert-footnote)
-  (define-key markdown-mode-map (kbd "A-a l") 'markdown-insert-link)
-  (define-key markdown-mode-map (kbd "A-a r") 'markdown-insert-reference-link-dwim)
-  (define-key markdown-mode-map (kbd "A-a u") 'markdown-insert-uri)
-  (define-key markdown-mode-map (kbd "A-a w") 'markdown-insert-wiki-link))
-
-(add-hook 'markdown-mode-hook
-          'my-markdown-mode-hook)
